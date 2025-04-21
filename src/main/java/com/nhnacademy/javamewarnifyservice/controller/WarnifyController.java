@@ -18,8 +18,8 @@ public class WarnifyController {
     private final WarnifyServiceImpl warnifyService;
 
     @PostMapping
-    public ResponseEntity<String> sendAlarm() {
-        String result = warnifyService.sendEmail("email", "info");
+    public ResponseEntity<String> sendEmail(String companyDomain, String warnInfo) {
+        String result = warnifyService.sendEmail(companyDomain, warnInfo);
         return ResponseEntity.ok(result);
     }
 
