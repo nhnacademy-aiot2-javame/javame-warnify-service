@@ -1,5 +1,6 @@
 package com.nhnacademy.javamewarnifyservice.controller;
 
+import com.nhnacademy.javamewarnifyservice.dto.WarnifyRequest;
 import com.nhnacademy.javamewarnifyservice.service.impl.WarnifyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class WarnifyController {
     private final WarnifyServiceImpl warnifyService;
 
     @PostMapping
-    public ResponseEntity<String> sendEmail(String companyDomain, String warnInfo) {
-        String result = warnifyService.sendEmail(companyDomain, warnInfo);
+    public ResponseEntity<String> sendEmail(WarnifyRequest warnifyRequest) {
+        String result = warnifyService.sendEmail(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         return ResponseEntity.ok(result);
     }
 
