@@ -69,6 +69,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.nurigo/sdk -->
+        <!-- 문자메세지 전송 dependency, 업체명 : coolsms -->
+        <dependency>
+            <groupId>net.nurigo</groupId>
+            <artifactId>sdk</artifactId>
+            <version>4.3.2</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

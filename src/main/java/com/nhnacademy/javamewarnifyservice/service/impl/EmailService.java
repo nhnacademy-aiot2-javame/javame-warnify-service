@@ -23,9 +23,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 @Slf4j
-@Service
+@Service("emailService")
 @RequiredArgsConstructor
-public class WarnifyServiceImpl implements WarnifyService {
+public class EmailService implements WarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.
@@ -46,7 +46,7 @@ public class WarnifyServiceImpl implements WarnifyService {
     private String senderPassword;
 
     @Override
-    public String sendEmail(String companyDomain, String warnInfo) {
+    public String sendAlarm(String companyDomain, String warnInfo) {
 
         // 알림 받는 이메일
         String receiveEmail = getCompanyResponse(companyDomain).getCompanyEmail();
@@ -75,11 +75,6 @@ public class WarnifyServiceImpl implements WarnifyService {
             return "이메일 전송 실패";
         }
 
-    }
-
-    @Override
-    public String sendSMS(String phoneNumber, String info) {
-        return "";
     }
 
     private CompanyResponse getCompanyResponse(String companyDomain) {
