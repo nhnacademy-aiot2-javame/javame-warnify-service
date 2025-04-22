@@ -2,8 +2,6 @@ package com.nhnacademy.javamewarnifyservice.controller;
 
 import com.nhnacademy.javamewarnifyservice.dto.WarnifyRequest;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
-import com.nhnacademy.javamewarnifyservice.service.impl.EmailService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
