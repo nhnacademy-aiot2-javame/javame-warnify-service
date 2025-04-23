@@ -16,17 +16,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class WarnifyController {
 
     /**
-     *  WarnifyService 호출.
+     *  emailService 호출.
      */
     private final WarnifyService emailService;
 
-    public WarnifyController(@Qualifier("emailService")WarnifyService emailService) {
+    /**
+     *  smsService 호출.
+     */
+    private final WarnifyService smslService;
+
+    public WarnifyController(
+            @Qualifier("emailService")WarnifyService emailService,
+            @Qualifier("smsService")WarnifyService smsService
+    ) {
         this.emailService = emailService;
+        this.smslService = smsService;
     }
 
     @PostMapping("/email")
     public ResponseEntity<String> sendEmail(@RequestBody WarnifyRequest warnifyRequest) {
         String result = emailService.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/sms")
+    public ResponseEntity<String> sendSms(WarnifyRequest warnifyRequest) {
+        String result = smslService.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         return ResponseEntity.ok(result);
     }
 
