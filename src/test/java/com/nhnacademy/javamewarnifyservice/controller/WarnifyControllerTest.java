@@ -27,12 +27,16 @@ class WarnifyControllerTest {
     @Qualifier("emailService")
     private WarnifyService emailService;
 
+    @MockitoBean
+    @Qualifier("smsService")
+    private WarnifyService smsService;
+
     @Test
     void sendEmail() throws Exception{
 
         Mockito.when(emailService.sendAlarm(Mockito.anyString(), Mockito.anyString())).thenReturn("이메일 발송 성공");
         mockMvc
-                .perform(post("/api/v1/warnify/email")
+                .perform(post("/warnify/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(
@@ -45,6 +49,27 @@ class WarnifyControllerTest {
                         ))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("이메일 발송 성공"))
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    void sendSms() throws Exception {
+        Mockito.when(smsService.sendAlarm(Mockito.anyString(), Mockito.anyString())).thenReturn("정상 접수(이통사로 접수 예정)");
+        mockMvc
+                .perform(post("/warnify/sms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+{
+  "companyDomain": "nhnacademy",
+  "warnInfo": "프래픽 너무 많음!"
+}
+                                """
+                        ))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("정상 접수(이통사로 접수 예정)"))
                 .andDo(MockMvcResultHandlers.print());
 
     }

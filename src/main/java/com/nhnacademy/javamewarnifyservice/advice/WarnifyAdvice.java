@@ -1,6 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.advice;
 
 import com.nhnacademy.javamewarnifyservice.JavameWarnifyServiceApplication;
+import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,14 +14,25 @@ import java.time.LocalDateTime;
 public class WarnifyAdvice {
 
     @ExceptionHandler(AuthenticationFailedException.class)
-    public ResponseEntity<ErrorResponse> emailAuthenticationFail(AuthenticationFailedException authenticationFailedException) {
+    public ResponseEntity<ErrorResponse> emailAuthenticationFail(AuthenticationFailedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                authenticationFailedException.getMessage()
+                ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(NurigoUnknownException.class)
+    public ResponseEntity<ErrorResponse> smsUnknownException(NurigoUnknownException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
 }
