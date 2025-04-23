@@ -77,6 +77,11 @@ public class EmailService implements WarnifyService {
 
     }
 
+    /**
+     * CompanyResponse check, get 하는 곳.
+     * @param companyDomain 회사 이름
+     * @return CompanyResponse(회사정보)
+     */
     private CompanyResponse getCompanyResponse(String companyDomain) {
         ResponseEntity<CompanyResponse> companyResponseResponseEntity = companyAdaptor.getCompanyByDomain(companyDomain);
 
@@ -87,6 +92,10 @@ public class EmailService implements WarnifyService {
         return companyResponseResponseEntity.getBody();
     }
 
+    /**
+     * 메일 전송 가능하도록 셋팅 해주는 곳.
+     * @return Session 셋팅한 정보
+     */
     private Session mailSetting() {
 
         // 구글 이메일 사용, 사용할수 있도록 셋팅

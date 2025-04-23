@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "MEMBER-API")
 public interface CompanyAdaptor {
 
-    @GetMapping("/api/v1/companies/{companyDomain}")
+    @GetMapping("/companies/{companyDomain}")
     ResponseEntity<CompanyResponse> getCompanyByDomain(@PathVariable String companyDomain);
 
 }
