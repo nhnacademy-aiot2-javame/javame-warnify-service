@@ -86,6 +86,7 @@ class EmailServiceTest {
 
             mockedStatic.verify(() -> Transport.send(any(MimeMessage.class)), times(1));
         }
+        
     }
 
 }
