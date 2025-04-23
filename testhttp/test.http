@@ -1,0 +1,3 @@
+POST http://localhost:10281/api/v1/warnify
+Content-Type: application/json
+Accept: application/json

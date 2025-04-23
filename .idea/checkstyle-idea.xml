@@ -4,11 +4,14 @@
     <checkstyleVersion>10.23.0</checkstyleVersion>
     <scanScope>JavaOnly</scanScope>
     <option name="thirdPartyClasspath" />
-    <option name="activeLocationIds" />
+    <option name="activeLocationIds">
+      <option value="a18d6fcb-6984-40e0-b46a-0f03e6014e20" />
+    </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="a18d6fcb-6984-40e0-b46a-0f03e6014e20" type="LOCAL_FILE" scope="All" description="javame">$USER_HOME$/javame.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
