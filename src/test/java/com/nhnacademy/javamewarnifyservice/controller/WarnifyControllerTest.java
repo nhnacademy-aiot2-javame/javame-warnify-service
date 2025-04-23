@@ -46,6 +46,7 @@ class WarnifyControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("이메일 발송 성공"))
                 .andDo(MockMvcResultHandlers.print());
+
     }
 
 }
