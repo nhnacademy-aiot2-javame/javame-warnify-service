@@ -1,6 +1,11 @@
-POST http://localhost:10281/api/v1/warnify/email
+POST http://localhost:10281/warnify/dooray
 Content-Type: application/json
 Accept: application/json
+
+{
+  "companyDomain": "zz",
+  "warnInfo": "Zz"
+}
 
 ###
 

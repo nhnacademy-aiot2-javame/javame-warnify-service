@@ -66,7 +66,7 @@ class EmailServiceTest {
         CompanyResponse companyResponse = new CompanyResponse(
                 "nhnacademy",
                 "nhn",
-                "abcdefghijk@naver.com",
+                "fhqht303@naver.com",
                 "010-1111-2222",
                 "김해시 내외동로",
                 LocalDateTime.of(2020,12,5,5,30),

@@ -64,7 +64,7 @@ class SmsServiceTest {
         Field setApiSecretKey = SmsService.class.getDeclaredField("apiSecretKey");
         setApiSecretKey.setAccessible(true);
         // "apiSecretKey" -> apiSecretKey 로 변환 해야함
-        setApiSecretKey.set(smsService, "apiSecretKey");
+        setApiSecretKey.set(smsService, apiSecretKey);
     }
 
     @Test
@@ -80,7 +80,6 @@ class SmsServiceTest {
         );
         ResponseEntity<CompanyResponse> companyResponseResponseEntity
                 = new ResponseEntity<>(companyResponse, HttpStatus.OK);
-        SingleMessageSendingRequest singMessage = new SingleMessageSendingRequest(message);
 
         Mockito.when(companyAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
         Mockito.when(messageService.sendOne(Mockito.any())).thenReturn(messageSentResponse);
@@ -88,7 +87,7 @@ class SmsServiceTest {
         String result = smsService.sendAlarm("nhnacademy","무언가가 잘못 됬어요!");
         log.error("result : {}", result);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("정상 접수(이통사로 접수 예정)",result);
+        Assertions.assertEquals("정상 접수(이통사로 접수 예정) ",result);
 
     }
 }

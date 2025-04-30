@@ -3,12 +3,18 @@ package com.nhnacademy.javamewarnifyservice.controller;
 import com.nhnacademy.javamewarnifyservice.dto.WarnifyRequest;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -16,33 +22,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class WarnifyController {
 
     /**
-     *  emailService 호출.
+     * WarnifyService 호출.
      */
-    private final WarnifyService emailService;
+    private final Map<String, WarnifyService> warnifyServiceMap;
 
-    /**
-     *  smsService 호출.
-     */
-    private final WarnifyService smslService;
-
-    public WarnifyController(
-            @Qualifier("emailService")WarnifyService emailService,
-            @Qualifier("smsService")WarnifyService smsService
-    ) {
-        this.emailService = emailService;
-        this.smslService = smsService;
+    public WarnifyController(List<WarnifyService> serviceList) {
+        warnifyServiceMap = new HashMap<>();
+        for (WarnifyService service : serviceList) {
+            warnifyServiceMap.put(service.getType(), service);
+        }
     }
 
-    @PostMapping("/email")
-    public ResponseEntity<String> sendEmail(@RequestBody WarnifyRequest warnifyRequest) {
-        String result = emailService.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+    @PostMapping("/{type}")
+    public ResponseEntity<String> sendAlarm(@PathVariable("type") String type, @Validated @RequestBody WarnifyRequest warnifyRequest) {
+        String result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No service found for type: " + type);
+        }
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/sms")
-    public ResponseEntity<String> sendSms(@RequestBody WarnifyRequest warnifyRequest) {
-        String result = smslService.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-        return ResponseEntity.ok(result);
+    public Map<String, WarnifyService> getWarnifyServiceMap() {
+        return warnifyServiceMap;
     }
 
 }
