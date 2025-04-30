@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/v1/warnify")
+@RequestMapping(value = "/warnify")
 public class WarnifyController {
 
     /**
@@ -40,7 +40,7 @@ public class WarnifyController {
     }
 
     @PostMapping("/sms")
-    public ResponseEntity<String> sendSms(WarnifyRequest warnifyRequest) {
+    public ResponseEntity<String> sendSms(@RequestBody WarnifyRequest warnifyRequest) {
         String result = smslService.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         return ResponseEntity.ok(result);
     }
