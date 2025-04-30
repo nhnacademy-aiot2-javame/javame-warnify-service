@@ -4,6 +4,7 @@ import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
 import com.nhnacademy.javamewarnifyservice.advice.exception.CompanyNotFoundException;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -25,11 +26,6 @@ public class SmsService implements WarnifyService {
     private final CompanyAdaptor companyAdaptor;
 
     /**
-     * 누리고 메세지 서비스.
-     */
-//    private final DefaultMessageService messageService;
-
-    /**
      * 누리고 API KEY.
      */
     @Value("${security.sms.apiKey}")
@@ -45,12 +41,24 @@ public class SmsService implements WarnifyService {
         this.companyAdaptor = companyAdaptor;
     }
 
+    /**
+     * 서비스의 종류를 나타내는 필드값입니다.
+     */
+    private static final String TYPE = "sms";
+
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
+        log.info("sms");
         DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey,"https://api.coolsms.co.kr");
         Message message = new Message();
         message.setFrom("010-2681-1995");
-        String receivePhoneNumber = getCompanyResponse(companyDomain).getCompanyMobile();
+        String receivePhoneNumber = getCompanyResponse(companyDomain, companyAdaptor).getCompanyMobile();
         message.setTo(receivePhoneNumber);
         message.setText("%s가 위험합니다! 확인하세요".formatted(warnInfo));
 
@@ -62,13 +70,4 @@ public class SmsService implements WarnifyService {
         return response.getStatusMessage();
     }
 
-    private CompanyResponse getCompanyResponse(String companyDomain) {
-        ResponseEntity<CompanyResponse> companyResponseResponseEntity = companyAdaptor.getCompanyByDomain(companyDomain);
-
-        if (!companyResponseResponseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new CompanyNotFoundException("회사를 찾기에 실패했습니다.");
-        }
-
-        return companyResponseResponseEntity.getBody();
-    }
 }

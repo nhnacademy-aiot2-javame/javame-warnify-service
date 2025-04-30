@@ -1,14 +1,12 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
 import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
-import com.nhnacademy.javamewarnifyservice.advice.exception.CompanyNotFoundException;
-import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Authenticator;
@@ -45,11 +43,21 @@ public class EmailService implements WarnifyService {
     @Value("${security.email.pwd}")
     private String senderPassword;
 
+    /**
+     * 서비스의 종류를 나타내는 필드값입니다.
+     */
+    private static final String TYPE = "email";
+
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
-
         // 알림 받는 이메일
-        String receiveEmail = getCompanyResponse(companyDomain).getCompanyEmail();
+        String receiveEmail = getCompanyResponse(companyDomain, companyAdaptor).getCompanyEmail();
 
         // 이메일 제목
         String subject = "%s 경고 입니다. 확인하세요!!".formatted(warnInfo);
@@ -75,21 +83,6 @@ public class EmailService implements WarnifyService {
             return "이메일 전송 실패";
         }
 
-    }
-
-    /**
-     * CompanyResponse check, get 하는 곳.
-     * @param companyDomain 회사 이름
-     * @return CompanyResponse(회사정보)
-     */
-    private CompanyResponse getCompanyResponse(String companyDomain) {
-        ResponseEntity<CompanyResponse> companyResponseResponseEntity = companyAdaptor.getCompanyByDomain(companyDomain);
-
-        if (!companyResponseResponseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new CompanyNotFoundException("회사를 찾기에 실패했습니다.");
-        }
-
-        return companyResponseResponseEntity.getBody();
     }
 
     /**
