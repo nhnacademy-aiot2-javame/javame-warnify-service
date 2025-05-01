@@ -1,10 +1,11 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
-import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,7 +31,7 @@ import static org.mockito.Mockito.times;
 class EmailServiceTest {
 
     @Mock
-    CompanyAdaptor companyAdaptor;
+    MemberApiAdaptor memberApiAdaptor;
 
     @InjectMocks
     EmailService emailService;
@@ -41,7 +42,7 @@ class EmailServiceTest {
     @Value("${security.email.pwd}")
     private String senderPassword;
 
-
+    Field sendPassword;
     @BeforeEach
     void setUp(){
         try {
@@ -49,10 +50,9 @@ class EmailServiceTest {
             sendEmail.setAccessible(true);
             sendEmail.set(emailService, senderEmail);
 
-            Field sendPassword = EmailService.class.getDeclaredField("senderPassword");
+            sendPassword = EmailService.class.getDeclaredField("senderPassword");
             sendPassword.setAccessible(true);
             log.error("senderEmail {}", senderEmail);
-            sendPassword.set(emailService, senderPassword);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -62,7 +62,9 @@ class EmailServiceTest {
     }
 
     @Test
-    void sendAlarm() {
+    @DisplayName("이메일 전송 성공")
+    void sendEmailSuccessTest() throws Exception{
+        sendPassword.set(emailService, senderPassword);
         CompanyResponse companyResponse = new CompanyResponse(
                 "nhnacademy",
                 "nhn",
@@ -74,7 +76,7 @@ class EmailServiceTest {
         );
         ResponseEntity<CompanyResponse> companyResponseResponseEntity
                 = new ResponseEntity<>(companyResponse, HttpStatus.OK);
-        Mockito.when(companyAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
+        Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
 
         // static 메서드를 가짜로 만들어줌, EmailService에서 Transport.send라는 static함수가 있는데 가짜로 만들어줌, send가 발송역활 이지만 발송 안되게 해줌.
         try(MockedStatic<Transport> mockedStatic = Mockito.mockStatic((Transport.class))){
@@ -87,6 +89,28 @@ class EmailServiceTest {
             mockedStatic.verify(() -> Transport.send(any(MimeMessage.class)), times(1));
         }
         
+    }
+
+    @Test
+    @DisplayName("이메일 전송 실패")
+    void sendEmailFailTest() throws Exception{
+        sendPassword.set(emailService, "wrongPassword");
+        CompanyResponse companyResponse = new CompanyResponse(
+                "nhnacademy",
+                "nhn",
+                "fhqht303@naver.com",
+                "010-1111-2222",
+                "김해시 내외동로",
+                LocalDateTime.of(2020,12,5,5,30),
+                true
+        );
+        ResponseEntity<CompanyResponse> companyResponseResponseEntity = new ResponseEntity<>(companyResponse, HttpStatus.OK);
+        Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
+
+        String result = emailService.sendAlarm("nhnacademy", "경고 알림!!");
+        log.info("result : {}", result);
+
+        Assertions.assertEquals("이메일 전송 실패", result);
     }
 
 }

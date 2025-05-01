@@ -3,10 +3,9 @@ package com.nhnacademy.javamewarnifyservice.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +21,9 @@ import org.springframework.web.client.RestClient;
 public class DoorayService implements WarnifyService {
 
     /**
-     * MemberAPI -> CompanyController 사용. CompanyAdaptor 호출.
+     * MemberAPI -> CompanyController 사용. MemberApiAdaptor 호출.
      */
-    private final CompanyAdaptor companyAdaptor;
+    private final MemberApiAdaptor memberApiAdaptor;
 
     /**
      * RestClient Builder 호출.
@@ -40,8 +39,9 @@ public class DoorayService implements WarnifyService {
     /**
      * 서비스의 종류를 나타내는 필드값입니다.
      */
-
     private static final String TYPE = "dooray";
+
+
 
     @Override
     public String getType() {
@@ -50,7 +50,7 @@ public class DoorayService implements WarnifyService {
 
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
-        CompanyResponse companyResponse = getCompanyResponse(companyDomain, companyAdaptor);
+        CompanyResponse companyResponse = getCompanyResponse(companyDomain, memberApiAdaptor);
         String doorayId = getDoorayMemberId(companyResponse.getCompanyEmail());
 
         String result = sendIndividualMsg(doorayId, warnInfo);
@@ -58,6 +58,12 @@ public class DoorayService implements WarnifyService {
         return result.equalsIgnoreCase("true") ? "두레이 발신 성공" : "두레이 발신 실패";
     }
 
+    /**
+     * Company email을 두레이에서 조회.
+     * 두레이에서 멤버ID 가져오기.
+     * @param email Company Eamil
+     * @return Dooray Member ID
+     */
     private String getDoorayMemberId(String email) {
         String doorayURL = "https://api.dooray.com/common/v1/members?externalEmailAddresses=%s".formatted(email);
 
@@ -75,10 +81,16 @@ public class DoorayService implements WarnifyService {
             JsonNode node = objectMapper.readTree(result);
             return node.path("result").get(0).path("id").asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return "JSON 형식을 확인 해보세요";
         }
     }
 
+    /**
+     * 1:1 개인 두레이 메신져 발송하는 메서드.
+     * @param id 두레이 ID
+     * @param warnInfo 경고 정보
+     * @return 발신 성공했으면 true
+     */
     private String sendIndividualMsg(String id, String warnInfo) {
         String doorayURL = "https://api.dooray.com/messenger/v1/channels/direct-send";
         String body =
@@ -101,14 +113,19 @@ public class DoorayService implements WarnifyService {
             JsonNode node = objectMapper.readTree(result);
             return node.path("header").path("isSuccessful").asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return "JSON 형식을 확인 해보세요";
         }
     }
 
+    /**
+     * 두레이 API 사용하기위한 헤더 셋팅.
+     * @return 셋팅된 RestClient
+     */
     private RestClient setUpRestClient() {
         return restClientBuilder
                 .defaultHeader("Authorization", "dooray-api " + apiKey)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
+
 }

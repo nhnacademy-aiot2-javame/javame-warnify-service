@@ -1,5 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.controller;
 
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
+import com.nhnacademy.javamewarnifyservice.dto.MemberResponse;
 import com.nhnacademy.javamewarnifyservice.dto.WarnifyRequest;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +35,9 @@ class WarnifyControllerTest {
     @MockitoBean(name = "doorayService")
     private WarnifyService doorayService;
 
+    @MockitoBean
+    private MemberApiAdaptor memberApiAdaptor;
+
     private WarnifyController controller;
 
     WarnifyRequest request;
@@ -43,12 +48,17 @@ class WarnifyControllerTest {
         when(smsService.getType()).thenReturn("sms");
         when(doorayService.getType()).thenReturn("dooray");
 
-        controller = new WarnifyController(List.of(emailService, smsService, doorayService));
+        controller = new WarnifyController(List.of(emailService, smsService, doorayService), memberApiAdaptor);
         request = new WarnifyRequest("nhnacademy", "경고 정보");
     }
 
     @Test
     void sendEmailTest() {
+        MemberResponse memberResponse = new MemberResponse();
+        List<MemberResponse> memberResponseList = List.of(memberResponse);
+        ResponseEntity<List<MemberResponse>> responseEntity = new ResponseEntity<>(memberResponseList, HttpStatus.OK);
+
+        when(memberApiAdaptor.getMemberById()).thenReturn(responseEntity);
         when(emailService.sendAlarm(anyString(), anyString())).thenReturn("Email 알람 전송됨");
 
         ResponseEntity<String> response = controller.sendAlarm("email", request);
@@ -61,6 +71,11 @@ class WarnifyControllerTest {
 
     @Test
     void sendSmsTest() {
+        MemberResponse memberResponse = new MemberResponse();
+        List<MemberResponse> memberResponseList = List.of(memberResponse);
+        ResponseEntity<List<MemberResponse>> responseEntity = new ResponseEntity<>(memberResponseList, HttpStatus.OK);
+
+        when(memberApiAdaptor.getMemberById()).thenReturn(responseEntity);
         when(smsService.sendAlarm(anyString(), anyString())).thenReturn("SMS 성공");
 
         ResponseEntity<String> response = controller.sendAlarm("sms", request);
@@ -73,6 +88,11 @@ class WarnifyControllerTest {
 
     @Test
     void sendDoorayTest() {
+        MemberResponse memberResponse = new MemberResponse();
+        List<MemberResponse> memberResponseList = List.of(memberResponse);
+        ResponseEntity<List<MemberResponse>> responseEntity = new ResponseEntity<>(memberResponseList, HttpStatus.OK);
+
+        when(memberApiAdaptor.getMemberById()).thenReturn(responseEntity);
         when(smsService.sendAlarm(anyString(), anyString())).thenReturn("두레이 전송 성공");
 
         ResponseEntity<String> response = controller.sendAlarm("sms", request);

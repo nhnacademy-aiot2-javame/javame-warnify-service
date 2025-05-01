@@ -1,19 +1,14 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
-import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
-import feign.Request;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +18,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
-import org.springframework.web.client.RestClient;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 
 @Slf4j
@@ -39,7 +32,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 class DoorayServiceTest {
 
     @MockitoBean
-    CompanyAdaptor companyAdaptor;
+    MemberApiAdaptor memberApiAdaptor;
 
     @Autowired
     DoorayService doorayService;
@@ -59,7 +52,7 @@ class DoorayServiceTest {
                 true
         );
 
-        Mockito.when(companyAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(new ResponseEntity<>(companyResponse,HttpStatus.OK));
+        Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(new ResponseEntity<>(companyResponse,HttpStatus.OK));
 
         // 멤버 조회 테스트
         String email = "nhnacademy@naver.com";
@@ -180,6 +173,77 @@ class DoorayServiceTest {
         log.info("id : {}", id);
         assertNotNull(id);
         assertEquals("true", id);
+    }
+
+    @Test
+    @DisplayName("getDoorayMemberId - ObjectMapper 에러")
+    void getDoorayMemberIdErrorTest() throws Exception{
+        String email = "fhqht303@naver.com";
+        String doorayURL = "https://api.dooray.com/common/v1/members?externalEmailAddresses=%s".formatted(email);
+
+        String result =
+                """
+                        {
+                            "header": {{
+                                "resultCode": 0,
+                                "resultMessage": "",
+                                "isSuccessful": true
+                            },
+                            "result": [
+                                {
+                                    "id": "1",
+                                    "userCode": "user1",
+                                    "name": "john",
+                                    "externalEmailAddress": "user1@mail.com"
+                                }
+                            ],
+                            "totalCount": 1
+                        }
+                """;
+
+        serviceServer
+                .expect(requestTo(doorayURL))
+                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
+                .andRespond(MockRestResponseCreators.withSuccess(result, MediaType.APPLICATION_JSON));
+
+        Method methoda = doorayService.getClass().getDeclaredMethod("getDoorayMemberId", String.class);
+        methoda.setAccessible(true);
+        String id = (String) methoda.invoke(doorayService, "fhqht303@naver.com");
+
+        log.info("id : {}",id);
+
+        assertNotNull(id);
+        assertEquals("JSON 형식을 확인 해보세요",id);
+    }
+
+    @Test
+    @DisplayName("sendIndividualMsg - ObjectMapper 에러")
+    void sendIndividualMsgErrorTest() throws Exception{
+        String doorayURL = "https://api.dooray.com/messenger/v1/channels/direct-send";
+        String result = """
+                {
+                    "header": {{
+                        "resultCode": 0,
+                        "resultMessage": "",
+                        "isSuccessful": true
+                    }},
+                    {"result": null}
+                }
+                """;
+
+        serviceServer
+                .expect(requestTo(doorayURL))
+                .andExpect(MockRestRequestMatchers.method(HttpMethod.POST))
+                .andRespond(MockRestResponseCreators.withSuccess(result, MediaType.APPLICATION_JSON));
+
+        Method method = doorayService.getClass().getDeclaredMethod("sendIndividualMsg", String.class, String.class);
+        method.setAccessible(true);
+
+        String id = (String) method.invoke(doorayService, "3884802321735904763", "Hello World");
+
+        log.info("id : {}", id);
+        assertNotNull(id);
+        assertEquals("JSON 형식을 확인 해보세요",id);
     }
 
 }

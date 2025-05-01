@@ -1,10 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
-import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
-import com.nhnacademy.javamewarnifyservice.advice.exception.CompanyNotFoundException;
-import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -12,7 +9,6 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,9 +17,9 @@ public class SmsService implements WarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.
-     * CompanyAdaptor 호출.
+     * MemberApiAdaptor 호출.
      */
-    private final CompanyAdaptor companyAdaptor;
+    private final MemberApiAdaptor memberApiAdaptor;
 
     /**
      * 누리고 API KEY.
@@ -37,8 +33,8 @@ public class SmsService implements WarnifyService {
     @Value("${security.sms.apiSecretKey}")
     private String apiSecretKey;
 
-    public SmsService(CompanyAdaptor companyAdaptor) {
-        this.companyAdaptor = companyAdaptor;
+    public SmsService(MemberApiAdaptor memberApiAdaptor) {
+        this.memberApiAdaptor = memberApiAdaptor;
     }
 
     /**
@@ -58,7 +54,7 @@ public class SmsService implements WarnifyService {
         DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey,"https://api.coolsms.co.kr");
         Message message = new Message();
         message.setFrom("010-2681-1995");
-        String receivePhoneNumber = getCompanyResponse(companyDomain, companyAdaptor).getCompanyMobile();
+        String receivePhoneNumber = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyMobile();
         message.setTo(receivePhoneNumber);
         message.setText("%s가 위험합니다! 확인하세요".formatted(warnInfo));
 
