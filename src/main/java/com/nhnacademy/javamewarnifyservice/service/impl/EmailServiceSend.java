@@ -1,9 +1,8 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
-import com.nhnacademy.javamewarnifyservice.adaptor.CompanyAdaptor;
-import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
+import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
+import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +14,6 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
@@ -23,13 +21,13 @@ import java.util.Properties;
 @Slf4j
 @Service("emailService")
 @RequiredArgsConstructor
-public class EmailService implements WarnifyService {
+public class EmailServiceSend implements SendWarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.
-     * CompanyAdaptor 호출.
+     * MemberApiAdaptor 호출.
      */
-    private final CompanyAdaptor companyAdaptor;
+    private final MemberApiAdaptor memberApiAdaptor;
 
     /**
      * 전송용 이메일 아이디.
@@ -57,7 +55,7 @@ public class EmailService implements WarnifyService {
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
         // 알림 받는 이메일
-        String receiveEmail = getCompanyResponse(companyDomain, companyAdaptor).getCompanyEmail();
+        String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
 
         // 이메일 제목
         String subject = "%s 경고 입니다. 확인하세요!!".formatted(warnInfo);
@@ -75,11 +73,7 @@ public class EmailService implements WarnifyService {
             message.setText(content,encoding);
             Transport.send(message);
             return "이메일 발송 성공";
-        } catch (AddressException e) {
-            log.error("AddressException error : {}", e.toString());
-            return "이메일 전송 실패";
         } catch (MessagingException e) {
-            log.error("MessagingException error : {}", e.toString());
             return "이메일 전송 실패";
         }
 
