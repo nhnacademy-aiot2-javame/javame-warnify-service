@@ -50,7 +50,7 @@ public class WarnifyAdvice {
     }
 
     @ExceptionHandler(MemberListNotFound.class)
-    public ResponseEntity<ErrorResponse> memberListNotFound(MemberListNotFound ex){
+    public ResponseEntity<ErrorResponse> memberListNotFound(MemberListNotFound ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),

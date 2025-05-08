@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class SendWarnifyServiceImpl implements WarnifyService {
+public class WarnifyServiceImpl implements WarnifyService {
 
     /**
      * warnifyRepository.

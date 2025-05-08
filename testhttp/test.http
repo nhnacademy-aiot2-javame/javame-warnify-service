@@ -8,13 +8,13 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:10281/warnify/send/email
+POST http://localhost:10279/api/v1/warnify/send/email
 Content-Type: application/json
 Accept: application/json
 
 {
   "companyDomain": "javame.com",
-  "warnInfo": "이메일발신!!"
+  "warnInfo": "이메일ddddddddddddd발신!!"
 }
 
 ###

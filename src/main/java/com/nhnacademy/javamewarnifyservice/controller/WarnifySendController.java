@@ -75,7 +75,6 @@ public class WarnifySendController {
 
     @GetMapping(value = "/event", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamEvent(@RequestParam String companyDomain, @RequestParam String memberNo) {
-        log.error("연결중");
         String clientId = companyDomain + memberNo;
         SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
         sseEmitterMapManage(emitter, clientId);
@@ -86,7 +85,7 @@ public class WarnifySendController {
     @PostMapping("/{type}")
     public ResponseEntity<String> sendAlarm(@PathVariable("type") String type, @Validated @RequestBody WarnifyRequest warnifyRequest) {
         String result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-
+        warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         List<MemberResponse> memberResponseList = getMemberResponseList();
         for (MemberResponse memberResponse : memberResponseList) {
             String clientId = warnifyRequest.getCompanyDomain() + memberResponse.getMemberNo();
