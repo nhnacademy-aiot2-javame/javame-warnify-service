@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
-import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
+import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Service("doorayService")
 @RequiredArgsConstructor
-public class DoorayService implements WarnifyService {
+public class DoorayServiceSend implements SendWarnifyService {
 
     /**
      * MemberAPI -> CompanyController 사용. MemberApiAdaptor 호출.

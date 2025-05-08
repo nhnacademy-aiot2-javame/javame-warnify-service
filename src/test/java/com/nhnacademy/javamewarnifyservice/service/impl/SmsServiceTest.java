@@ -46,15 +46,15 @@ class SmsServiceTest {
     SingleMessageSentResponse response;
 
     @InjectMocks
-    SmsService smsService;
+    SmsServiceSend smsService;
 
     @BeforeEach
     void setUp() throws Exception{
-        Field setApiKey = SmsService.class.getDeclaredField("apiKey");
+        Field setApiKey = SmsServiceSend.class.getDeclaredField("apiKey");
         setApiKey.setAccessible(true);
         setApiKey.set(smsService, apiKey);
 
-        Field setApiSecretKey = SmsService.class.getDeclaredField("apiSecretKey");
+        Field setApiSecretKey = SmsServiceSend.class.getDeclaredField("apiSecretKey");
         setApiSecretKey.setAccessible(true);
         // "apiSecretKey" -> apiSecretKey 로 변환 해야함
         setApiSecretKey.set(smsService, apiSecretKey);

@@ -1,7 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
 import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
-import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
+import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service("smsService")
-public class SmsService implements WarnifyService {
+public class SmsServiceSend implements SendWarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.
@@ -33,7 +33,7 @@ public class SmsService implements WarnifyService {
     @Value("${security.sms.apiSecretKey}")
     private String apiSecretKey;
 
-    public SmsService(MemberApiAdaptor memberApiAdaptor) {
+    public SmsServiceSend(MemberApiAdaptor memberApiAdaptor) {
         this.memberApiAdaptor = memberApiAdaptor;
     }
 

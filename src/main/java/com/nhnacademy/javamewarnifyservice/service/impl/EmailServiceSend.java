@@ -1,7 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
 import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
-import com.nhnacademy.javamewarnifyservice.service.WarnifyService;
+import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.Properties;
 @Slf4j
 @Service("emailService")
 @RequiredArgsConstructor
-public class EmailService implements WarnifyService {
+public class EmailServiceSend implements SendWarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.

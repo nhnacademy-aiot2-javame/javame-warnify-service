@@ -1,14 +1,28 @@
-POST http://localhost:10281/warnify/dooray
+POST http://localhost:10279/api/v1/warnify/send/dooray
 Content-Type: application/json
 Accept: application/json
 
 {
-  "companyDomain": "zz",
-  "warnInfo": "Zz"
+  "companyDomain": "javame.com",
+  "warnInfo": "두레이발신!!"
 }
 
 ###
-
-POST http://localhost:10281/api/v1/warnify/sms
+POST http://localhost:10281/warnify/send/email
 Content-Type: application/json
 Accept: application/json
+
+{
+  "companyDomain": "javame.com",
+  "warnInfo": "이메일발신!!"
+}
+
+###
+POST http://localhost:10281/warnify/sms
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyDomain": "javame.com",
+  "warnInfo": "sms발신!!"
+}

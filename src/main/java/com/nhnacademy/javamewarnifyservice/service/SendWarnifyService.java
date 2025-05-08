@@ -5,7 +5,7 @@ import com.nhnacademy.javamewarnifyservice.advice.exception.CompanyNotFoundExcep
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import org.springframework.http.ResponseEntity;
 
-public interface WarnifyService {
+public interface SendWarnifyService {
 
     String sendAlarm(String companyDomain, String warnInfo);
 
