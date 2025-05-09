@@ -21,7 +21,7 @@ import java.util.Properties;
 @Slf4j
 @Service("emailService")
 @RequiredArgsConstructor
-public class EmailServiceSend implements SendWarnifyService {
+public class EmailService implements SendWarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.

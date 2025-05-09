@@ -35,7 +35,7 @@ class DoorayServiceTest {
     MemberApiAdaptor memberApiAdaptor;
 
     @Autowired
-    DoorayServiceSend doorayService;
+    DoorayService doorayService;
 
     @Autowired
     MockRestServiceServer serviceServer;

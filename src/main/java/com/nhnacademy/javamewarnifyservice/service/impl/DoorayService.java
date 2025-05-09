@@ -18,7 +18,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Service("doorayService")
 @RequiredArgsConstructor
-public class DoorayServiceSend implements SendWarnifyService {
+public class DoorayService implements SendWarnifyService {
 
     /**
      * MemberAPI -> CompanyController 사용. MemberApiAdaptor 호출.

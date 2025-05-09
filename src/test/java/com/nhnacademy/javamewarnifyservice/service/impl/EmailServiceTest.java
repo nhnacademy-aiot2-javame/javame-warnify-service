@@ -34,7 +34,7 @@ class EmailServiceTest {
     MemberApiAdaptor memberApiAdaptor;
 
     @InjectMocks
-    EmailServiceSend emailService;
+    EmailService emailService;
 
     @Value("${security.email.id}")
     private String senderEmail;
@@ -46,16 +46,14 @@ class EmailServiceTest {
     @BeforeEach
     void setUp(){
         try {
-            Field sendEmail = EmailServiceSend.class.getDeclaredField("senderEmail");
+            Field sendEmail = EmailService.class.getDeclaredField("senderEmail");
             sendEmail.setAccessible(true);
             sendEmail.set(emailService, senderEmail);
 
-            sendPassword = EmailServiceSend.class.getDeclaredField("senderPassword");
+            sendPassword = EmailService.class.getDeclaredField("senderPassword");
             sendPassword.setAccessible(true);
             log.error("senderEmail {}", senderEmail);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

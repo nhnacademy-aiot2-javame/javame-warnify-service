@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service("smsService")
-public class SmsServiceSend implements SendWarnifyService {
+public class SmsService implements SendWarnifyService {
 
     /**
      * MemberAPI - CompanyController 사용.
@@ -33,7 +33,7 @@ public class SmsServiceSend implements SendWarnifyService {
     @Value("${security.sms.apiSecretKey}")
     private String apiSecretKey;
 
-    public SmsServiceSend(MemberApiAdaptor memberApiAdaptor) {
+    public SmsService(MemberApiAdaptor memberApiAdaptor) {
         this.memberApiAdaptor = memberApiAdaptor;
     }
 
