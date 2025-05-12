@@ -1,6 +1,6 @@
 # Dockerfile
 FROM ubuntu:latest
-LABEL authors="saumonrose08"
+LABEL authors="hso03"
 
 ENTRYPOINT ["top", "-b"]
 
