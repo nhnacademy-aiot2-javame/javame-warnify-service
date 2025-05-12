@@ -18,6 +18,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+
+/**
+ * 경고 알람 발생시 email 메시지 발송.
+ */
 @Slf4j
 @Service("emailService")
 @RequiredArgsConstructor
@@ -46,19 +50,28 @@ public class EmailService implements SendWarnifyService {
      */
     private static final String TYPE = "email";
 
+    /**
+     * Warnfiy 서비스 타입.
+     * @return email
+     */
     @Override
     public String getType() {
         return TYPE;
     }
 
-
+    /**
+     * company에 warnInfo 발송 메서드.
+     * @param companyDomain 경고가 발생한 회사 도메인
+     * @param warnInfo 경고 정보
+     * @return 발송 성공여부
+     */
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
         // 알림 받는 이메일
         String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
 
         // 이메일 제목
-        String subject = "%s 경고 입니다. 확인하세요!!".formatted(warnInfo);
+        String subject = ("%s 경고 입니다. 확인하세요!!").formatted(warnInfo);
 
         // 이메일 내용
         String content = "%s 확인 하셔야 합니다.".formatted(warnInfo);

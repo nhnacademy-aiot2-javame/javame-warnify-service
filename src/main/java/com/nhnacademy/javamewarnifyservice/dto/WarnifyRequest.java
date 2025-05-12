@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * TransService에서 응답 정보 받는 DTO.
+ */
 @Getter
 @RequiredArgsConstructor
 public class WarnifyRequest {

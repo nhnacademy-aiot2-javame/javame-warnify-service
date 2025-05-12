@@ -2,6 +2,7 @@ package com.nhnacademy.javamewarnifyservice.service.impl;
 
 import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
 import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -11,8 +12,12 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * 경고 알람 발생시 sms 메시지 발송.
+ */
 @Slf4j
 @Service("smsService")
+@RequiredArgsConstructor
 public class SmsService implements SendWarnifyService {
 
     /**
@@ -33,21 +38,25 @@ public class SmsService implements SendWarnifyService {
     @Value("${security.sms.apiSecretKey}")
     private String apiSecretKey;
 
-    public SmsService(MemberApiAdaptor memberApiAdaptor) {
-        this.memberApiAdaptor = memberApiAdaptor;
-    }
-
     /**
      * 서비스의 종류를 나타내는 필드값입니다.
      */
     private static final String TYPE = "sms";
 
+    /**
+     * 서비스의 종류를 나타내는 필드값입니다.
+     */
     @Override
     public String getType() {
         return TYPE;
     }
 
-
+    /**
+     * company에 warnInfo 발송 메서드.
+     * @param companyDomain 경고가 발생한 회사 도메인
+     * @param warnInfo 경고 정보
+     * @return 발송 성공여부
+     */
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
         log.info("sms");

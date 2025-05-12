@@ -27,6 +27,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * TransService에서 경고 정보를 받고
+ * 이메일, 문자, 두레이 발신 하는 컨트롤러.
+ */
 @Slf4j
 @RestController
 @RequestMapping(value = "/warnify/send")
@@ -53,7 +57,8 @@ public class WarnifySendController {
     private final WarnifyService warnifyService;
 
     /**
-     * 생성자, warnifyServiceMap에는 Warnify를 구현하는 Service가 들어감.
+     * 생성자, warnifyServiceMap에는 Warnify를 구현하는 Service가 들어감
+     * list에는 두레이, 문자, 이메일 서비스가 들어감.
      * @param serviceList WarnifyService를 구현하는 Service의 리스트.
      * @param memberApiAdaptor memberApiAdaptor
      * @param warnifyService warnifyService
@@ -73,6 +78,13 @@ public class WarnifySendController {
         }
     }
 
+    /**
+     * Front-End와 SSE 연결.
+     * POST에서 메세지창 뜨게 해주는 역할.
+     * @param companyDomain 회사 도메인
+     * @param memberNo 멤버 넘버
+     * @return SseEmitter
+     */
     @GetMapping(value = "/event", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamEvent(@RequestParam String companyDomain, @RequestParam String memberNo) {
         String clientId = companyDomain + memberNo;
@@ -82,6 +94,14 @@ public class WarnifySendController {
         return emitter;
     }
 
+    /**
+     * type에 맞는 메세지 전송
+     * ex) type=sms 이면 문자메세지 발송.
+     * SSE로 Front-End에 메세지창 발생.
+     * @param type 메세지 보낼 종류
+     * @param warnifyRequest 회사정보, 경고정보가 있는 DTO
+     * @return 전송 성공여부
+     */
     @PostMapping("/{type}")
     public ResponseEntity<String> sendAlarm(@PathVariable("type") String type, @Validated @RequestBody WarnifyRequest warnifyRequest) {
         String result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
@@ -128,6 +148,10 @@ public class WarnifySendController {
         });
     }
 
+    /**
+     * SSE연결할 멤버 리스트 불러오기.
+     * @return MemberResponse 반환.
+     */
     private List<MemberResponse> getMemberResponseList() {
         ResponseEntity<List<MemberResponse>> responseEntity = memberApiAdaptor.getMemberResponseList();
         if (!responseEntity.getStatusCode().is2xxSuccessful()) {

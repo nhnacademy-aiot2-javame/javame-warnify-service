@@ -6,6 +6,9 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+/**
+ * 응답처리시 반환할 DTO.
+ */
 @Getter
 @ToString
 @RequiredArgsConstructor

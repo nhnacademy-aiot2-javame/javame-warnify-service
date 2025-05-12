@@ -4,6 +4,9 @@ import lombok.Value;
 
 import java.time.LocalDateTime;
 
+/**
+ * Warnify 응답 DTO.
+ */
 @Value
 public class WarnifyResponse {
 
