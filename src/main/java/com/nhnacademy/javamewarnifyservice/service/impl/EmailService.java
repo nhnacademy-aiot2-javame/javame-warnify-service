@@ -55,7 +55,8 @@ public class EmailService implements SendWarnifyService {
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
         // 알림 받는 이메일
-        String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
+//        String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
+        String receiveEmail = "fhqht303@naver.com";
 
         // 이메일 제목
         String subject = "%s 경고 입니다. 확인하세요!!".formatted(warnInfo);
