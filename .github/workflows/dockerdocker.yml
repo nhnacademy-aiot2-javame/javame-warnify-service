@@ -67,7 +67,6 @@ jobs:
               echo "WARNIFY_IMAGE_TAG=${{ env.WARNIFY_IMAGE_TAG }}" >> .env
               fi
 
-              echo "$SERVICE_NAME is running → stop & rm & up only this service"
               docker-compose stop $SERVICE_NAME
               docker-compose rm -f $SERVICE_NAME
               docker-compose up -d $SERVICE_NAME
