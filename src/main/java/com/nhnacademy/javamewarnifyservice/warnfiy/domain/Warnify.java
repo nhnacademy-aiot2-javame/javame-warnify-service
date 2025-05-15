@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * DB에 저장될 도메인
+ * 경고 발생시 회사도메인, 일자, 경고정보 저장.
+ */
 @Entity
 @Table(name = "warnifys")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +42,12 @@ public class Warnify {
     @Column(name = "company_domain")
     private String companyDomain;
 
+    /**
+     * Warnify 생성자.
+     * @param warnInfo 경고 정보
+     * @param warnDate 경고 일자
+     * @param companyDomain 회사 도메인
+     */
     public Warnify(String warnInfo, LocalDateTime warnDate, String companyDomain) {
         this.warnInfo = warnInfo;
         this.warnDate = warnDate;

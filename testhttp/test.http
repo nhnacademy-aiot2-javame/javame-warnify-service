@@ -14,7 +14,7 @@ Accept: application/json
 
 {
   "companyDomain": "javame.com",
-  "warnInfo": "이메일ddddddddddddd발신!!"
+  "warnInfo": "이메일발신!!"
 }
 
 ###
@@ -26,3 +26,6 @@ Accept: application/json
   "companyDomain": "javame.com",
   "warnInfo": "sms발신!!"
 }
+
+###
+GET http://localhost:10282/warnify-service/prod

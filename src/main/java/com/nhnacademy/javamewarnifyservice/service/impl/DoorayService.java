@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 /**
- * Dooray 메시지 발송.
+ * 경고 알람 발생시 Dooray 메시지 발송.
  */
 @Slf4j
 @Service("doorayService")
@@ -41,13 +41,21 @@ public class DoorayService implements SendWarnifyService {
      */
     private static final String TYPE = "dooray";
 
-
-
+    /**
+     * Warnfiy 서비스 타입.
+     * @return dooray
+     */
     @Override
     public String getType() {
         return TYPE;
     }
 
+    /**
+     * company에 warnInfo 발송 메서드.
+     * @param companyDomain 경고가 발생한 회사 도메인
+     * @param warnInfo 경고 정보
+     * @return 발송 성공여부
+     */
     @Override
     public String sendAlarm(String companyDomain, String warnInfo) {
         CompanyResponse companyResponse = getCompanyResponse(companyDomain, memberApiAdaptor);

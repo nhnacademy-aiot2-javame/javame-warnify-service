@@ -34,8 +34,8 @@ import java.util.function.Consumer;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@ActiveProfiles("dev")
 @WebMvcTest(controllers = {WarnifySendController.class})
+@ActiveProfiles("test")
 class WarnifySendControllerTest {
 
     @Autowired

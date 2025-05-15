@@ -2,6 +2,9 @@ package com.nhnacademy.javamewarnifyservice.warnfiy.dto;
 
 import lombok.Value;
 
+/**
+ * Warnfiy 등록 DTO.
+ */
 @Value
 public class WarnifyRegisterRequest {
 
