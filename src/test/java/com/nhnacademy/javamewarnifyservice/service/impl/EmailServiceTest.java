@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,8 +26,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 @Slf4j
-@SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
 
     @Mock
@@ -36,23 +36,16 @@ class EmailServiceTest {
     @InjectMocks
     EmailService emailService;
 
-    @Value("${security.email.id}")
-    private String senderEmail;
-
-    @Value("${security.email.pwd}")
-    private String senderPassword;
-
     Field sendPassword;
     @BeforeEach
     void setUp(){
         try {
             Field sendEmail = EmailService.class.getDeclaredField("senderEmail");
             sendEmail.setAccessible(true);
-            sendEmail.set(emailService, senderEmail);
+            sendEmail.set(emailService, "nhnacademy@naver.com");
 
             sendPassword = EmailService.class.getDeclaredField("senderPassword");
             sendPassword.setAccessible(true);
-            log.error("senderEmail {}", senderEmail);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -62,7 +55,7 @@ class EmailServiceTest {
     @Test
     @DisplayName("이메일 전송 성공")
     void sendEmailSuccessTest() throws Exception{
-        sendPassword.set(emailService, senderPassword);
+        sendPassword.set(emailService, "password");
         CompanyResponse companyResponse = new CompanyResponse(
                 "nhnacademy",
                 "nhn",

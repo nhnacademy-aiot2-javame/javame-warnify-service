@@ -43,8 +43,6 @@ class SmsServiceTest {
     @Mock
     MemberApiAdaptor memberApiAdaptor;
 
-    @Mock
-    SingleMessageSentResponse response;
 
     @InjectMocks
     SmsService smsService;
@@ -78,7 +76,7 @@ class SmsServiceTest {
 
         Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
         Mockito.when(messageService.sendOne(Mockito.any())).thenReturn(messageSentResponse);
-        Mockito.when(response.getStatusMessage()).thenReturn("정상 접수(이통사로 접수 예정) ");
+        Mockito.when(messageSentResponse.getStatusMessage()).thenReturn("정상 접수(이통사로 접수 예정) ");
 
         String result = smsService.sendAlarm("nhnacademy","무언가가 잘못 됬어요!");
         log.error("result : {}", result);
