@@ -4,7 +4,7 @@ import com.nhnacademy.javamewarnifyservice.warnfiy.dto.WarnifyResponse;
 import com.nhnacademy.javamewarnifyservice.warnfiy.service.WarnifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +18,9 @@ public class WarnifyController {
      */
     private final WarnifyService warnifyService;
 
-    @PostMapping
-    public ResponseEntity<WarnifyResponse> registerWarnify() {
+    @GetMapping
+    public ResponseEntity<WarnifyResponse> getWarnifyList() {
+
         return null;
     }
 
