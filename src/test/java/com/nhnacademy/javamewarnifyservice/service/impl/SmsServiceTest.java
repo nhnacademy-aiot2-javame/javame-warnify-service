@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class SmsServiceTest {
 
     @Value("${security.sms.apiKey}")

@@ -30,4 +30,9 @@ public class WarnifyResponse {
      */
     private final LocalDateTime warnDate;
 
+    /**
+     * 경고 해결 여부.
+     */
+    private final String resolve;
+
 }

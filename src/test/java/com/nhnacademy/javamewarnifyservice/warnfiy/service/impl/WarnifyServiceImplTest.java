@@ -1,5 +1,6 @@
 package com.nhnacademy.javamewarnifyservice.warnfiy.service.impl;
 
+import com.nhnacademy.javamewarnifyservice.config.KSTTime;
 import com.nhnacademy.javamewarnifyservice.warnfiy.domain.Warnify;
 import com.nhnacademy.javamewarnifyservice.warnfiy.dto.WarnifyResponse;
 import com.nhnacademy.javamewarnifyservice.warnfiy.repository.WarnifyRepository;
@@ -12,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -32,7 +36,7 @@ class WarnifyServiceImplTest {
     void setUp() {
         warnify = new Warnify(
                 "경고 입니다!",
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 "javame.com"
         );
     }
@@ -58,17 +62,18 @@ class WarnifyServiceImplTest {
     @Test
     @DisplayName("경고 목록 가지고 오기")
     void getWarnifyList() {
-        List<Warnify> warnifyList = List.of(warnify);
-        Mockito.when(warnifyRepository.findByCompanyDomain(Mockito.anyString())).thenReturn(warnifyList);
+//        List<Warnify> warnifyList = List.of(warnify);
+//        Page<Warnify> warnifyList = new PageImpl<>(warnify);
+        Mockito.when(warnifyRepository.findByCompanyDomain("javame.com", Pageable.ofSize(1))).thenReturn(new PageImpl<>(List.of(warnify)));
 
-        List<WarnifyResponse> warnifyResponseList = warnifyService.getWarnifyList("javame.com");
+        Page<WarnifyResponse> warnifyResponseList = warnifyService.getWarnifyList("javame.com", Pageable.ofSize(1));
 
         Assertions.assertNotNull(warnifyResponseList);
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals("javame.com", warnifyResponseList.getFirst().getCompanyDomain()),
-                ()->Assertions.assertEquals("경고 입니다!", warnifyResponseList.getFirst().getWarnInfo()),
-                ()->Assertions.assertNotNull(warnifyResponseList.getFirst().getWarnDate())
+                ()->Assertions.assertEquals("javame.com", warnifyResponseList.getContent().getFirst().getCompanyDomain()),
+                ()->Assertions.assertEquals("경고 입니다!", warnifyResponseList.getContent().getFirst().getWarnInfo()),
+                ()->Assertions.assertNotNull(warnifyResponseList.getContent().getFirst().getWarnDate())
         );
     }
 }
