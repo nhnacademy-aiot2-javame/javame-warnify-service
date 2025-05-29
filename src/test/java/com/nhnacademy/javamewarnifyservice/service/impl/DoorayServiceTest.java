@@ -1,6 +1,7 @@
 package com.nhnacademy.javamewarnifyservice.service.impl;
 
 import com.nhnacademy.javamewarnifyservice.adaptor.MemberApiAdaptor;
+import com.nhnacademy.javamewarnifyservice.config.KSTTime;
 import com.nhnacademy.javamewarnifyservice.dto.CompanyResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockRestServiceServer
+@ActiveProfiles("test")
 class DoorayServiceTest {
 
     @MockitoBean
@@ -46,7 +49,7 @@ class DoorayServiceTest {
                 "nhnacademy@naver.com",
                 "010-1111-1111",
                 "김해시 어딘가",
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 true
         );
 
