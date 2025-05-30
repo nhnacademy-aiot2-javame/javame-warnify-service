@@ -42,11 +42,6 @@ public class WarnifySendController {
     private final Map<String, SendWarnifyService> warnifyServiceMap;
 
     /**
-     * SSE에서 사용될 MAP.
-     */
-    private final Map<String, SseEmitter> sseEmitterMap;
-
-    /**
      * MemberAdaptor.
      */
     private final MemberApiAdaptor memberApiAdaptor;
@@ -68,7 +63,6 @@ public class WarnifySendController {
             MemberApiAdaptor memberApiAdaptor,
             WarnifyService warnifyService
     ) {
-        sseEmitterMap = new ConcurrentHashMap<>();
         this.memberApiAdaptor = memberApiAdaptor;
         this.warnifyService = warnifyService;
 
@@ -76,22 +70,6 @@ public class WarnifySendController {
         for (SendWarnifyService service : serviceList) {
             warnifyServiceMap.put(service.getType(), service);
         }
-    }
-
-    /**
-     * Front-End와 SSE 연결.
-     * POST에서 메세지창 뜨게 해주는 역할.
-     * @param companyDomain 회사 도메인
-     * @param memberNo 멤버 넘버
-     * @return SseEmitter
-     */
-    @GetMapping(value = "/event", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamEvent(@RequestParam String companyDomain, @RequestParam String memberNo) {
-        String clientId = companyDomain + memberNo;
-        SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
-        sseEmitterMapManage(emitter, clientId);
-        sseEmitterMap.put(clientId, emitter);
-        return emitter;
     }
 
     /**
@@ -106,58 +84,7 @@ public class WarnifySendController {
     public ResponseEntity<String> sendAlarm(@PathVariable("type") String type, @Validated @RequestBody WarnifyRequest warnifyRequest) {
         String result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-        List<MemberResponse> memberResponseList = getMemberResponseList();
-        for (MemberResponse memberResponse : memberResponseList) {
-            String clientId = warnifyRequest.getCompanyDomain() + memberResponse.getMemberNo();
-            SseEmitter emitter = sseEmitterMap.get(clientId);
-            if (Objects.nonNull(emitter)) {
-                try {
-                    emitter.send(SseEmitter.event()
-                            .name("WARN")
-                            .data(warnifyRequest.getWarnInfo()));
-                } catch (IOException e) {
-                    log.error("SSE 전송 에러", e);
-                    sseEmitterMap.remove(warnifyRequest.getCompanyDomain());
-                }
-            }
-        }
-
         return ResponseEntity.ok(result);
-    }
-
-    /**
-     * SseEmitter 연결종료, 타임아웃, 에러발생 시 Map에 있는 SseEmitter 삭제 하여 관리.
-     * @param emitter 해당 SseEmitter
-     * @param clientId 관리 받을 회사 도메인
-     */
-    private void sseEmitterMapManage(SseEmitter emitter, String clientId) {
-        emitter.onCompletion(() -> {
-            log.info("SSE 연결 종료 : {}", clientId);
-            sseEmitterMap.remove(clientId);
-        });
-
-        emitter.onTimeout(() -> {
-            log.warn("SSE 타임아웃 : {}", clientId);
-            sseEmitterMap.remove(clientId);
-        });
-
-        emitter.onError(e -> {
-            log.error("SSE 에러 : {}", clientId);
-            log.error("에러 내용 : {}", e.toString());
-            sseEmitterMap.remove(clientId);
-        });
-    }
-
-    /**
-     * SSE연결할 멤버 리스트 불러오기.
-     * @return MemberResponse 반환.
-     */
-    private List<MemberResponse> getMemberResponseList() {
-        ResponseEntity<List<MemberResponse>> responseEntity = memberApiAdaptor.getMemberResponseList();
-        if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new MemberListNotFound("멤버리스트를 불러올 수 없습니다.");
-        }
-        return responseEntity.getBody();
     }
 
 }
