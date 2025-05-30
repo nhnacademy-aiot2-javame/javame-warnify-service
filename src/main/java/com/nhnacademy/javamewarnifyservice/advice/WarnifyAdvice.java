@@ -2,6 +2,7 @@ package com.nhnacademy.javamewarnifyservice.advice;
 
 import com.nhnacademy.javamewarnifyservice.JavameWarnifyServiceApplication;
 import com.nhnacademy.javamewarnifyservice.advice.exception.MemberListNotFound;
+import com.nhnacademy.javamewarnifyservice.config.KSTTime;
 import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class WarnifyAdvice {
     @ExceptionHandler(AuthenticationFailedException.class)
     public ResponseEntity<ErrorResponse> emailAuthenticationFail(AuthenticationFailedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 HttpStatus.UNAUTHORIZED.value(),
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
                 ex.getMessage()
@@ -42,7 +43,7 @@ public class WarnifyAdvice {
     @ExceptionHandler(NurigoUnknownException.class)
     public ResponseEntity<ErrorResponse> smsUnknownException(NurigoUnknownException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 ex.getMessage()
@@ -58,7 +59,7 @@ public class WarnifyAdvice {
     @ExceptionHandler(HttpClientErrorException.BadRequest.class)
     public ResponseEntity<ErrorResponse> httpClientErrorException(HttpClientErrorException.BadRequest ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 ex.getMessage()
@@ -75,7 +76,7 @@ public class WarnifyAdvice {
     @ExceptionHandler(MemberListNotFound.class)
     public ResponseEntity<ErrorResponse> memberListNotFound(MemberListNotFound ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                KSTTime.kstTimeNow(),
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage()

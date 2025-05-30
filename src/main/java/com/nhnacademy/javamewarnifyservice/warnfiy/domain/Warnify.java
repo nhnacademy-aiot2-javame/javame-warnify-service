@@ -43,6 +43,12 @@ public class Warnify {
     private String companyDomain;
 
     /**
+     * 경고에 대한 문제 해결 여부.
+     */
+    @Column(name = "warn_resolve")
+    private boolean warnResolve;
+
+    /**
      * Warnify 생성자.
      * @param warnInfo 경고 정보
      * @param warnDate 경고 일자
@@ -52,6 +58,11 @@ public class Warnify {
         this.warnInfo = warnInfo;
         this.warnDate = warnDate;
         this.companyDomain = companyDomain;
+        this.warnResolve = false;
+    }
+
+    public void updateResolve(boolean resolve){
+        this.warnResolve = resolve;
     }
 
 }
