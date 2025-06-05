@@ -70,12 +70,8 @@ public class EmailService implements SendWarnifyService {
         // 알림 받는 이메일
         String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
 
-
         // 이메일 제목
         String subject = ("%s 경고 입니다. 확인하세요!!").formatted(warnInfo);
-
-        // 이메일 내용
-        String content = "%s 확인 하셔야 합니다.".formatted(warnInfo);
 
         String encoding = "UTF-8";
         try {
@@ -84,7 +80,7 @@ public class EmailService implements SendWarnifyService {
             message.setFrom(new InternetAddress(senderEmail));
             message.addRecipients(Message.RecipientType.TO, receiveEmail);
             message.setSubject(subject, encoding);
-            message.setText(content,encoding);
+            message.setText(warnInfo,encoding);
             Transport.send(message);
             return "이메일 발송 성공";
         } catch (MessagingException e) {
