@@ -11,6 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 /**
  * 경고 목록을 가지고오는 컨트롤러 입니다.
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/warnify")
 @RequiredArgsConstructor
-@RefreshScope
 public class WarnifyController {
 
     /**
@@ -40,10 +41,9 @@ public class WarnifyController {
     }
 
     @PutMapping("/resolve/{warnifyId}")
-    public ResponseEntity<String> warnifyResolve(@PathVariable("warnifyId") Long warnifyId, @RequestParam("resolve") String resolve){
+    public ResponseEntity<Map<String, String>> warnifyResolve(@PathVariable("warnifyId") Long warnifyId, @RequestParam("resolve") String resolve){
         String info = warnifyService.resolveWarn(warnifyId, resolve);
-        return ResponseEntity.ok(info);
+        return ResponseEntity.ok(Map.of("result",info));
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.nhnacademy.javamewarnifyservice.warnfiy.service.impl;
 
+import com.nhnacademy.javamewarnifyservice.advice.exception.WarnifyNotFoundException;
 import com.nhnacademy.javamewarnifyservice.config.KSTTime;
 import com.nhnacademy.javamewarnifyservice.warnfiy.domain.Warnify;
 import com.nhnacademy.javamewarnifyservice.warnfiy.dto.WarnifyResponse;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -76,4 +79,61 @@ class WarnifyServiceImplTest {
                 ()->Assertions.assertNotNull(warnifyResponseList.getContent().getFirst().getWarnDate())
         );
     }
+
+    @Test
+    @DisplayName("resolve 값이 null이 왔을때")
+    void resolveWarnIsNull(){
+        String resolve = null;
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,()-> warnifyService.resolveWarn(1L, resolve)
+        );
+    }
+
+    @Test
+    @DisplayName("resolve 값이 true, false가 아닐때")
+    void resolveWarnNotBoolean(){
+        String resolve = "TTrue";
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,()-> warnifyService.resolveWarn(1L, resolve)
+        );
+    }
+
+    @Test
+    @DisplayName("경고id를 찾지 못했을때")
+    void resolveWarnNotFoundWarnify(){
+        String resolve = "true";
+
+        Mockito.when(warnifyRepository.findByWarnifyId(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                WarnifyNotFoundException.class,()-> warnifyService.resolveWarn(1L, resolve)
+        );
+    }
+
+    @Test
+    @DisplayName("resolve가 true일때")
+    void resolveWarnTrue(){
+        String resolve = "true";
+
+        Mockito.when(warnifyRepository.findByWarnifyId(Mockito.anyLong())).thenReturn(Optional.of(warnify));
+
+        String result = warnifyService.resolveWarn(1L, resolve);
+
+        Assertions.assertEquals("경고에 대한 문제해결이 되었습니다.",result);
+    }
+
+    @Test
+    @DisplayName("resolve가 false일때")
+    void resolveWarnFalse(){
+        String resolve = "false";
+
+        Mockito.when(warnifyRepository.findByWarnifyId(Mockito.anyLong())).thenReturn(Optional.of(warnify));
+
+        String result = warnifyService.resolveWarn(1L, resolve);
+
+        Assertions.assertEquals("경고에 대한 문제해결이 안됬습니다.",result);
+    }
+
 }

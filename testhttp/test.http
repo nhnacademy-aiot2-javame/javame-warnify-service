@@ -39,3 +39,6 @@ POST http://localhost:10281/actuator/refresh
 
 ###
 GET http://localhost:10279/api/v1/warnify/list/javame.com
+
+###
+GET http://localhost:10281/warnify/list/javame.com?page=0
