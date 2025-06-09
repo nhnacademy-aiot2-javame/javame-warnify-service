@@ -108,6 +108,7 @@ public class WarnifyServiceImpl implements WarnifyService {
             warnify.updateResolve(booleanResolve);
             return "경고에 대한 문제해결이 되었습니다.";
         }
+        warnify.updateResolve(false);
         return "경고에 대한 문제해결이 안됬습니다.";
     }
 }
