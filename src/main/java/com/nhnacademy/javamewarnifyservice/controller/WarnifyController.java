@@ -40,7 +40,7 @@ public class WarnifyController {
         return ResponseEntity.ok(warnifyResponseList);
     }
 
-    @PutMapping("/resolve/{warnifyId}")
+    @PatchMapping("/resolve/{warnifyId}")
     public ResponseEntity<Map<String, String>> warnifyResolve(@PathVariable("warnifyId") Long warnifyId, @RequestParam("resolve") String resolve){
         String info = warnifyService.resolveWarn(warnifyId, resolve);
         return ResponseEntity.ok(Map.of("result",info));

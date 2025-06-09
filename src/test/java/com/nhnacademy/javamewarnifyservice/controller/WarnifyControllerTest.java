@@ -22,8 +22,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +66,7 @@ class WarnifyControllerTest {
         Mockito.when(warnifyService.resolveWarn(Mockito.anyLong(), Mockito.anyString())).thenReturn("경고에 대한 문제해결이 되었습니다.");
 
         // when & then
-        mockMvc.perform(put("/warnify/resolve/1")
+        mockMvc.perform(patch("/warnify/resolve/1")
                         .param("resolve", "true"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("result").value("경고에 대한 문제해결이 되었습니다."))
