@@ -39,3 +39,12 @@ Trans-Service에서 임계치가 초과 됬을때 사용자에게 알림을 보�
 <li>Warnify 저장 및 조회</li>
 
 </div>
+<div align=center>
+<h3 tabindex="-1" class="heading-element" dir="auto">Test Coverage (Targe:Line coverage 80%)</h3> 
+  <li>
+    Line coverage: 85.3%
+  </li>
+
+![스크린샷 2025-06-11 00-27-20](https://github.com/user-attachments/assets/bfcba850-1f47-4f75-aca1-7478cafad082)
+
+</div>
