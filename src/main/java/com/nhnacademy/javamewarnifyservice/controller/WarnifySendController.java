@@ -40,7 +40,6 @@ public class WarnifySendController {
      * 생성자, warnifyServiceMap에는 Warnify를 구현하는 Service가 들어감
      * list에는 두레이, 문자, 이메일 서비스가 들어감.
      * @param serviceList WarnifyService를 구현하는 Service의 리스트.
-     * @param memberApiAdaptor memberApiAdaptor
      * @param warnifyService warnifyService
      */
     public WarnifySendController(
@@ -77,8 +76,8 @@ public class WarnifySendController {
      */
     @PostMapping("/all")
     public ResponseEntity<String> sendAlarmAll(@Validated @RequestBody WarnifyRequest warnifyRequest){
-        warnifyServiceMap.forEach((key,warnifyServiceMap) -> {
-            warnifyServiceMap.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+        warnifyServiceMap.forEach((key,warnifyServiceMapValue) -> {
+            warnifyServiceMapValue.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
             warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         });
         return ResponseEntity.ok("전송완료");

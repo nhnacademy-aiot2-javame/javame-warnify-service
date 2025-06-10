@@ -3,7 +3,6 @@ package com.nhnacademy.javamewarnifyservice.controller;
 import com.nhnacademy.javamewarnifyservice.warnfiy.dto.WarnifyResponse;
 import com.nhnacademy.javamewarnifyservice.warnfiy.service.WarnifyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,7 +30,7 @@ public class WarnifyController {
      * 경고온 목록 페이지로 조회.
      * @param companyDomain 회사 도메인
      * @param pageable 페이지
-     * @return
+     * @return 경고정보 페이지로 리턴.
      */
     @GetMapping("/list/{company-domain}")
     public ResponseEntity<Page<WarnifyResponse>> getWarnifyList(@PathVariable("company-domain")String companyDomain, @PageableDefault(size = 2, sort = "warnDate", direction = Sort.Direction.DESC) Pageable pageable) {

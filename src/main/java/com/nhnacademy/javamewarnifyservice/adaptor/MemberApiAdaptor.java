@@ -15,7 +15,6 @@ public interface MemberApiAdaptor {
     @GetMapping("/companies/{companyDomain}")
     ResponseEntity<CompanyResponse> getCompanyByDomain(@PathVariable String companyDomain);
 
-    // todo#1 멤버API에 현재 메서드 없음 추가해야함
     @GetMapping("/members")
     ResponseEntity<List<MemberResponse>> getMemberResponseList();
 
