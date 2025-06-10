@@ -3,6 +3,7 @@ package com.nhnacademy.javamewarnifyservice.advice;
 import com.nhnacademy.javamewarnifyservice.JavameWarnifyServiceApplication;
 import com.nhnacademy.javamewarnifyservice.advice.exception.MemberListNotFound;
 import com.nhnacademy.javamewarnifyservice.config.KSTTime;
+import net.nurigo.sdk.message.exception.NurigoBadRequestException;
 import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class WarnifyAdvice {
      * @param ex coolsms Exception
      * @return ErrorResponse
      */
-    @ExceptionHandler(NurigoUnknownException.class)
+    @ExceptionHandler(NurigoBadRequestException.class)
     public ResponseEntity<ErrorResponse> smsUnknownException(NurigoUnknownException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 KSTTime.kstTimeNow(),
