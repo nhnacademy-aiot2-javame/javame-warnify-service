@@ -28,5 +28,6 @@ Trans-Service에서 임계치가 초과 됬을때 사용자에게 알림을 보�
 
 <div align="center">
 <h3 tabindex="-1" class="heading-element" dir="auto">사용 외부 API</h3>
-![image](https://github.com/user-attachments/assets/ee7d9045-ba7c-42a6-8d45-ad6186f3f64d)
+![archiecture](https://github.com/user-attachments/assets/49911324-f43b-4743-b239-3fe482c39c29)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 </div>
