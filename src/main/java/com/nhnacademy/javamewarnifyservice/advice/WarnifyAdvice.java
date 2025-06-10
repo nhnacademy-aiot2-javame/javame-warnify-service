@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.mail.AuthenticationFailedException;
-import java.time.LocalDateTime;
 
 /**
  * 에러 핸들러.
