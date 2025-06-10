@@ -2,6 +2,7 @@ package com.nhnacademy.javamewarnifyservice.advice;
 
 import com.nhnacademy.javamewarnifyservice.JavameWarnifyServiceApplication;
 import com.nhnacademy.javamewarnifyservice.advice.exception.MemberListNotFound;
+import com.nhnacademy.javamewarnifyservice.advice.exception.WarnifySendFailException;
 import com.nhnacademy.javamewarnifyservice.config.KSTTime;
 import net.nurigo.sdk.message.exception.NurigoBadRequestException;
 import net.nurigo.sdk.message.exception.NurigoUnknownException;
@@ -83,6 +84,18 @@ public class WarnifyAdvice {
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(WarnifySendFailException.class)
+    public ResponseEntity<ErrorResponse> warnifySendFailException(WarnifySendFailException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                KSTTime.kstTimeNow(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
 }

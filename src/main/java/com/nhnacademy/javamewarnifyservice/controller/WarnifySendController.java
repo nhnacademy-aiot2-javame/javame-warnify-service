@@ -58,7 +58,6 @@ public class WarnifySendController {
     /**
      * type에 맞는 메세지 전송
      * ex) type=sms 이면 문자메세지 발송.
-     * SSE로 Front-End에 메세지창 발생.
      * @param type 메세지 보낼 종류
      * @param warnifyRequest 회사정보, 경고정보가 있는 DTO
      * @return 전송 성공여부
@@ -70,7 +69,7 @@ public class WarnifySendController {
         if (result){
             return ResponseEntity.ok("%s 전송 성공".formatted(type));
         }
-        throw new WarnifySendFailException("메신저 전송 실패 하였습니다.");
+        throw new WarnifySendFailException("메세지 전송 실패 하였습니다.");
     }
 
     /**
