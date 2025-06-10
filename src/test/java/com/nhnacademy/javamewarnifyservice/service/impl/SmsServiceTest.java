@@ -78,10 +78,9 @@ class SmsServiceTest {
         Mockito.when(messageService.sendOne(Mockito.any())).thenReturn(messageSentResponse);
         Mockito.when(messageSentResponse.getStatusMessage()).thenReturn("정상 접수(이통사로 접수 예정) ");
 
-        String result = smsService.sendAlarm("nhnacademy","무언가가 잘못 됬어요!");
+        boolean result = smsService.sendAlarm("nhnacademy","무언가가 잘못 됬어요!");
         log.error("result : {}", result);
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals("정상 접수(이통사로 접수 예정) ",result);
+        Assertions.assertTrue(result);
 
     }
 

@@ -57,13 +57,13 @@ public class DoorayService implements SendWarnifyService {
      * @return 발송 성공여부
      */
     @Override
-    public String sendAlarm(String companyDomain, String warnInfo) {
+    public boolean sendAlarm(String companyDomain, String warnInfo) {
         CompanyResponse companyResponse = getCompanyResponse(companyDomain, memberApiAdaptor);
         String doorayId = getDoorayMemberId(companyResponse.getCompanyEmail());
 
         String result = sendIndividualMsg(doorayId, warnInfo);
 
-        return result.equalsIgnoreCase("true") ? "두레이 발신 성공" : "두레이 발신 실패";
+        return result.equalsIgnoreCase("true");
     }
 
     /**

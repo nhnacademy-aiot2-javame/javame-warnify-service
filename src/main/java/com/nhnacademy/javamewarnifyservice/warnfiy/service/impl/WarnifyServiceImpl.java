@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +45,6 @@ public class WarnifyServiceImpl implements WarnifyService {
                 KSTTime.kstTimeNow(),
                 companyDomain
         );
-        log.error("date : {}",LocalDateTime.now());
         Warnify savedWarnify = warnifyRepository.save(warnify);
 
         return new WarnifyResponse(

@@ -58,7 +58,7 @@ public class SmsService implements SendWarnifyService {
      * @return 발송 성공여부
      */
     @Override
-    public String sendAlarm(String companyDomain, String warnInfo) {
+    public boolean sendAlarm(String companyDomain, String warnInfo) {
         DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey,"https://api.coolsms.co.kr");
         Message message = new Message();
         message.setFrom("010-2681-1995");
@@ -70,7 +70,7 @@ public class SmsService implements SendWarnifyService {
                 = messageService.sendOne(new SingleMessageSendingRequest(message));
 
         //statusMessage=정상 접수(이통사로 접수 예정)
-        return response.getStatusMessage();
+        return response.getStatusMessage().equals("정상 접수(이통사로 접수 예정) ");
     }
 
 }

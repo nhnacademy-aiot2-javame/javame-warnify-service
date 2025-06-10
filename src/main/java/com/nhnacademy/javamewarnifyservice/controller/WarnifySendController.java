@@ -1,5 +1,6 @@
 package com.nhnacademy.javamewarnifyservice.controller;
 
+import com.nhnacademy.javamewarnifyservice.advice.exception.WarnifySendFailException;
 import com.nhnacademy.javamewarnifyservice.dto.WarnifyRequest;
 import com.nhnacademy.javamewarnifyservice.service.SendWarnifyService;
 import com.nhnacademy.javamewarnifyservice.warnfiy.service.WarnifyService;
@@ -64,9 +65,12 @@ public class WarnifySendController {
      */
     @PostMapping("/{type}")
     public ResponseEntity<String> sendAlarm(@PathVariable("type") String type, @Validated @RequestBody WarnifyRequest warnifyRequest) {
-        String result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+        boolean result = warnifyServiceMap.get(type).sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
         warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-        return ResponseEntity.ok(result);
+        if (result){
+            return ResponseEntity.ok("%s 전송 성공".formatted(type));
+        }
+        throw new WarnifySendFailException("메신저 전송 실패 하였습니다.");
     }
 
     /**
@@ -76,11 +80,18 @@ public class WarnifySendController {
      */
     @PostMapping("/all")
     public ResponseEntity<String> sendAlarmAll(@Validated @RequestBody WarnifyRequest warnifyRequest){
-        warnifyServiceMap.forEach((key,warnifyServiceMapValue) -> {
-            warnifyServiceMapValue.sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-            warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
-        });
-        return ResponseEntity.ok("전송완료");
+        int count =0;
+        for(Map.Entry<String, SendWarnifyService> entry : warnifyServiceMap.entrySet()){
+            boolean result = entry.getValue().sendAlarm(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+            if(result){
+                count++;
+            }
+        }
+        warnifyService.registerWarnfiy(warnifyRequest.getCompanyDomain(), warnifyRequest.getWarnInfo());
+        if(count==0){
+            throw new WarnifySendFailException("메세지 전송 실패 하였습니다.");
+        }
+        return ResponseEntity.ok("%d개의 메시지 전송 성공".formatted(count));
     }
 
 }
