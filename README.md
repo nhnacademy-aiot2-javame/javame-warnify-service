@@ -28,6 +28,14 @@ Trans-Service에서 임계치가 초과 됬을때 사용자에게 알림을 보�
 
 <div align="center">
 <h3 tabindex="-1" class="heading-element" dir="auto">사용 외부 API</h3>
+  
 ![archiecture](https://github.com/user-attachments/assets/49911324-f43b-4743-b239-3fe482c39c29)
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+
+<h3 tabindex="-1" class="heading-element" dir="auto">1. Mqtt Broker → Trans-Service → Rule-API 임계치 확인</h3> 
+<li>임계치 확인 이상값 발생시 Warnify-Service에 응답</li>
+<li>회사 도메인 확인 후 POST에 해당하는 메신저로 응답 알림</li>
+
+<h3 tabindex="-1" class="heading-element" dir="auto">2. Warnify-Service↔ MySQL</h3> 
+<li>Warnify 저장 및 조회</li>
+
 </div>
