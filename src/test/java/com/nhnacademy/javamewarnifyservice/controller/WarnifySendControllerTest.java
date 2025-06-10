@@ -62,7 +62,7 @@ class WarnifySendControllerTest {
         ResponseEntity<List<MemberResponse>> entity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         when(sendWarnifyService.getType()).thenReturn("emailService");
-        when(sendWarnifyService.sendAlarm(Mockito.anyString(),Mockito.anyString())).thenReturn("result");
+        when(sendWarnifyService.sendAlarm(Mockito.anyString(),Mockito.anyString())).thenReturn(true);
         when(memberApiAdaptor.getMemberResponseList()).thenReturn(entity);
 
         mockMvc.
@@ -78,6 +78,26 @@ class WarnifySendControllerTest {
 """))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+        verify(warnifyService, times(1)).registerWarnfiy("javame.com", "이메일 발신!!");
+
+    }
+
+    @Test
+    @DisplayName("모든 메신저 발송")
+    void allMessageSend() throws Exception {
+        when(sendWarnifyService.sendAlarm(anyString(),anyString())).thenReturn(true);
+        mockMvc
+                .perform(MockMvcRequestBuilders.post("/warnify/send/all")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+                                {
+                                  "companyDomain": "javame.com",
+                                  "warnInfo": "이메일 발신!!"
+                                }
+                                """
+                        )).andExpect(MockMvcResultMatchers.status().isOk());
         verify(warnifyService, times(1)).registerWarnfiy("javame.com", "이메일 발신!!");
 
     }

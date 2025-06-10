@@ -66,7 +66,7 @@ public class EmailService implements SendWarnifyService {
      * @return 발송 성공여부
      */
     @Override
-    public String sendAlarm(String companyDomain, String warnInfo) {
+    public boolean sendAlarm(String companyDomain, String warnInfo) {
         // 알림 받는 이메일
         String receiveEmail = getCompanyResponse(companyDomain, memberApiAdaptor).getCompanyEmail();
 
@@ -82,9 +82,9 @@ public class EmailService implements SendWarnifyService {
             message.setSubject(subject, encoding);
             message.setText(warnInfo,encoding);
             Transport.send(message);
-            return "이메일 발송 성공";
+            return true;
         } catch (MessagingException e) {
-            return "이메일 전송 실패";
+            return false;
         }
 
     }

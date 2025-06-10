@@ -102,9 +102,9 @@ class DoorayServiceTest {
                 .andExpect(MockRestRequestMatchers.method(HttpMethod.POST))
                 .andRespond(MockRestResponseCreators.withSuccess(result1, MediaType.APPLICATION_JSON));
 
-        String sendResult = doorayService.sendAlarm("nhnacademy", "warninfo");
+        boolean sendResult = doorayService.sendAlarm("nhnacademy", "warninfo");
 
-        assertEquals("두레이 발신 성공", sendResult);
+        assertEquals(true, sendResult);
     }
 
     @Test

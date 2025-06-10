@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface SendWarnifyService {
 
-    String sendAlarm(String companyDomain, String warnInfo);
+    boolean sendAlarm(String companyDomain, String warnInfo);
 
     String getType();
 

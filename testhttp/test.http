@@ -19,12 +19,12 @@ X-USER-ROLE: ROLE_ADMIN
 }
 
 ###
-POST http://localhost:10281/warnify/sms
+POST http://localhost:10281/warnify/send/sms
 Content-Type: application/json
 Accept: application/json
 
 {
-  "companyDomain": "javame.com",
+  "companyDomain": "osh.com",
   "warnInfo": "sms발신!!"
 }
 
@@ -42,3 +42,14 @@ GET http://localhost:10279/api/v1/warnify/list/javame.com
 
 ###
 GET http://localhost:10281/warnify/list/javame.com?page=0
+
+
+###
+POST http://localhost:10281/warnify/send/all
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyDomain": "osh.com",
+  "warnInfo": "경고 발생!!!ㅋㅋ"
+}

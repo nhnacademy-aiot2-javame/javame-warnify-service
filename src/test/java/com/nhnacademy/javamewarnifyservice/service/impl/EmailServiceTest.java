@@ -72,10 +72,9 @@ class EmailServiceTest {
         // static 메서드를 가짜로 만들어줌, EmailService에서 Transport.send라는 static함수가 있는데 가짜로 만들어줌, send가 발송역활 이지만 발송 안되게 해줌.
         try(MockedStatic<Transport> mockedStatic = Mockito.mockStatic((Transport.class))){
 
-            String result = emailService.sendAlarm("nhnacademy","경고!");
+            boolean result = emailService.sendAlarm("nhnacademy","경고!");
 
-            Assertions.assertNotNull(result);
-            Assertions.assertEquals("이메일 발송 성공", result);
+            Assertions.assertTrue(result);
 
             mockedStatic.verify(() -> Transport.send(any(MimeMessage.class)), times(1));
         }
@@ -98,10 +97,10 @@ class EmailServiceTest {
         ResponseEntity<CompanyResponse> companyResponseResponseEntity = new ResponseEntity<>(companyResponse, HttpStatus.OK);
         Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
 
-        String result = emailService.sendAlarm("nhnacademy", "경고 알림!!");
+        boolean result = emailService.sendAlarm("nhnacademy", "경고 알림!!");
         log.info("result : {}", result);
 
-        Assertions.assertEquals("이메일 전송 실패", result);
+        Assertions.assertFalse(result);
     }
 
 }
