@@ -28,26 +28,8 @@ import java.time.LocalDateTime;
 @ExtendWith(MockitoExtension.class)
 class SmsServiceTest {
 
-//    @Value("${security.sms.apiKey}")
-//    private String apiKey;
-
-//    @Value("${security.sms.apiSecretKey}")
-//    private String apiSecretKey;
-
-//    @Mock
-//    DefaultMessageService messageService;
-
-//    @Mock
-//    SingleMessageSentResponse messageSentResponse;
-
     @Mock
     MemberApiAdaptor memberApiAdaptor;
-
-//    @Mock
-//    Message message;
-
-//    @Mock
-//    DefaultMessageService defaultMessageService;
 
     @InjectMocks
     SmsService smsService;
@@ -58,46 +40,6 @@ class SmsServiceTest {
         setApiKey.setAccessible(true);
         setApiKey.set(smsService, "apiKey");
     }
-
-//    @Test
-//    @DisplayName("sms 발신 성공")
-//    void sendAlarm() throws Exception{
-////        Field setApiSecretKey = SmsService.class.getDeclaredField("apiSecretKey");
-////        setApiSecretKey.setAccessible(true);
-////        // "apiSecretKey" -> apiSecretKey 로 변환 해야함
-////        setApiSecretKey.set(smsService, "GHYB7LUFJMOYGTQB3EU3O8PZAUDJN7WK");
-//
-//        DefaultMessageService defaultMessageService1 = new DefaultMessageService("ACSKRTNO7FN4TR3A","GHYB7LUFJMOYGTQB3EU3O8PZAUDJN7WA","https://api.coolsms.co.kr");
-//        CompanyResponse companyResponse = new CompanyResponse(
-//                "nhnacademy",
-//                "nhn",
-//                "abcdefghijk@naver.com",
-//                "010-0000-000012",
-//                "김해시 내외동로",
-//                LocalDateTime.of(2020,12,5,5,30),
-//                true
-//        );
-//        ResponseEntity<CompanyResponse> companyResponseResponseEntity = new ResponseEntity<>(companyResponse, HttpStatus.OK);
-//
-////        Mockito.when(NurigoApp.INSTANCE.initialize(Mockito.anyString(), Mockito.anyString(), "https://api.coolsms.co.kr")).thenReturn(defaultMessageService1);
-////        Mockito.when(memberApiAdaptor.getCompanyByDomain(Mockito.anyString())).thenReturn(companyResponseResponseEntity);
-//
-//        Mockito.when(NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, Mockito.eq("https://api.coolsms.co.kr")))
-//                .thenReturn(defaultMessageService);
-//
-//        Mockito.when(messageService.sendOne(Mockito.any())).thenReturn(messageSentResponse);
-//        Mockito.when(messageSentResponse.getStatusMessage()).thenReturn("정상 접수(이통사로 접수 예정) ");
-//
-//        boolean result = smsService.sendAlarm("nhnacademy","무언가가 잘못 됬어요!");
-//
-//        Assertions.assertTrue(result);
-//
-//        Mockito.verify(message, Mockito.times(1)).setFrom(Mockito.anyString());
-//        Mockito.verify(message, Mockito.times(1)).setTo(Mockito.anyString());
-//        Mockito.verify(message, Mockito.times(1)).setText(Mockito.anyString());
-//
-//
-//    }
 
     @Test
     @DisplayName("sms 발신 실패")

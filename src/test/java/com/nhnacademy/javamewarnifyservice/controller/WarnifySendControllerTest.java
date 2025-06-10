@@ -18,8 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 import java.lang.reflect.Field;
@@ -28,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {WarnifySendController.class})
 @ActiveProfiles("test")
@@ -44,9 +44,6 @@ class WarnifySendControllerTest {
 
     @MockitoBean("emailService")
     private SendWarnifyService sendWarnifyService;
-
-    @MockitoBean
-    SseEmitter sseEmitter;
 
     @Autowired
     private WarnifySendController controller;
@@ -76,7 +73,7 @@ class WarnifySendControllerTest {
   "warnInfo": "이메일 발신!!"
 }
 """))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
 
         verify(warnifyService, times(1)).registerWarnfiy("javame.com", "이메일 발신!!");
 
@@ -97,9 +94,60 @@ class WarnifySendControllerTest {
                                   "warnInfo": "이메일 발신!!"
                                 }
                                 """
-                        )).andExpect(MockMvcResultMatchers.status().isOk());
+                        )).andExpect(status().isOk());
         verify(warnifyService, times(1)).registerWarnfiy("javame.com", "이메일 발신!!");
 
+    }
+
+    @Test
+    @DisplayName("메세지 전송 실패")
+    void sendMessageFail() throws Exception{
+        Map<String, SendWarnifyService> warnifyServiceMap = new HashMap<>();
+        warnifyServiceMap.put("email",sendWarnifyService);
+        Field map = controller.getClass().getDeclaredField("warnifyServiceMap");
+        map.setAccessible(true);
+        map.set(controller, warnifyServiceMap);
+
+        Mockito.when(sendWarnifyService.sendAlarm(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+
+        mockMvc.
+                perform(MockMvcRequestBuilders.post("/warnify/send/email")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+                                {
+                                  "companyDomain": "javame.com",
+                                  "warnInfo": "이메일 발신!!"
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value("400"))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("메세지 전송 실패 하였습니다."));
+
+    }
+
+    @Test
+    @DisplayName("전체 전송 과정중 메세지 전체 실패")
+    void sendMessageAllFail() throws Exception{
+        when(sendWarnifyService.sendAlarm(anyString(),anyString())).thenReturn(false);
+        mockMvc
+                .perform(MockMvcRequestBuilders.post("/warnify/send/all")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                """
+                                {
+                                  "companyDomain": "javame.com",
+                                  "warnInfo": "이메일 발신!!"
+                                }
+                                """
+                        ))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value("400"))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("메세지 전송 실패 하였습니다."));
     }
 
 }
